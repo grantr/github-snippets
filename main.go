@@ -21,28 +21,28 @@ const (
 var (
 	tokenFile = flag.String("token_file", "", "Path to the token file")
 	user      = flag.String("user", "Harwayne", "GitHub user name")
-	start     = flag.String("start", lastMonday().Format(timeFormat), "Start date in '%m-%d-%y' format")
+	start     = flag.String("start", lastCompletedWeekMonday().Format(timeFormat), "Start date in '%m-%d-%y' format")
 	duration  = flag.Duration("duration", week, "Duration of time from the start")
 )
 
-func lastMonday() time.Time {
+func lastCompletedWeekMonday() time.Time {
 	now := time.Now()
 	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
 	switch today.Weekday() {
-	case time.Tuesday:
-		return today.AddDate(0, 0, -1)
-	case time.Wednesday:
-		return today.AddDate(0, 0, -2)
-	case time.Thursday:
-		return today.AddDate(0, 0, -3)
-	case time.Friday:
-		return today.AddDate(0, 0, -4)
-	case time.Saturday:
-		return today.AddDate(0, 0, -5)
-	case time.Sunday:
-		return today.AddDate(0, 0, -6)
 	case time.Monday:
 		return today.AddDate(0, 0, -7)
+	case time.Tuesday:
+		return today.AddDate(0, 0, -8)
+	case time.Wednesday:
+		return today.AddDate(0, 0, -9)
+	case time.Thursday:
+		return today.AddDate(0, 0, -10)
+	case time.Friday:
+		return today.AddDate(0, 0, -11)
+	case time.Saturday:
+		return today.AddDate(0, 0, -12)
+	case time.Sunday:
+		return today.AddDate(0, 0, -13)
 	}
 	log.Fatal("Couldn't calculate last monday")
 	return time.Time{}
@@ -62,7 +62,7 @@ func main() {
 	fe := filterEventsForTime(events, startTime)
 	oe := organizeEvents(fe)
 	md := oe.markdown()
-	log.Print(md)
+	log.Print("\n" + md)
 }
 
 func oauthClient() *http.Client {
