@@ -148,7 +148,15 @@ func organizeEvents(events []*github.Event) *eventSets {
 
 			}
 		case *github.IssueCommentEvent:
-			eventSets.issues[issueTitle(e.Issue)] = true
+			if e.Issue.IsPullRequest() {
+				if e.Issue.User.GetLogin() == *user {
+					eventSets.underReview[issueTitle(e.Issue)] = true
+				} else {
+					eventSets.reviewed[issueTitle(e.Issue)] = true
+				}
+			} else {
+				eventSets.issues[issueTitle(e.Issue)] = true
+			}
 		case *github.IssuesEvent:
 			switch e.GetAction() {
 			case "opened":
@@ -157,7 +165,12 @@ func organizeEvents(events []*github.Event) *eventSets {
 			case "closed":
 			case "assigned":
 			}
-			eventSets.issues[issueTitle(e.Issue)] = true
+			if e.Issue.IsPullRequest() {
+				eventSets.reviewed[issueTitle(e.Issue)] = true
+			} else {
+				eventSets.issues[issueTitle(e.Issue)] = true
+				log.Printf("Added issueevent %s", issueTitle(e.Issue))
+			}
 		case *github.PullRequestEvent:
 			switch e.GetAction() {
 			case "opened":
@@ -181,7 +194,9 @@ func organizeEvents(events []*github.Event) *eventSets {
 				log.Printf("Unknown pull request action: %s", e.GetAction())
 			}
 		case *github.PullRequestReviewCommentEvent:
-			if e.PullRequest.User.GetName() != *user {
+			if e.PullRequest.User.GetLogin() == *user {
+				eventSets.underReview[prTitle(e.PullRequest)] = true
+			} else {
 				eventSets.reviewed[prTitle(e.PullRequest)] = true
 			}
 		case *github.PushEvent:
