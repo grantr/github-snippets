@@ -237,9 +237,9 @@ func printSection(section map[string]bool, title string) []string {
 }
 
 func prTitle(pr *github.PullRequest) string {
-	return fmt.Sprintf("[%s](%s)", pr.GetTitle(), pr.GetURL())
+	return fmt.Sprintf("[%s](%s)", pr.GetTitle(), pr.GetHTMLURL())
 }
 
 func issueTitle(issue *github.Issue) string {
-	return fmt.Sprintf("[%s](%s)", issue.GetTitle(), issue.GetURL())
+	return fmt.Sprintf("[%s](%s)", issue.GetTitle(), issue.GetHTMLURL())
 }
