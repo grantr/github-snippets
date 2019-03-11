@@ -226,7 +226,7 @@ func (e *eventSets) cleanUp() {
 
 func (e *eventSets) markdown() string {
 	md := make([]string, 0)
-	md = append(md, "* GitHub")
+	md = append(md, "# GitHub Activity")
 	md = append(md, printSection(e.merged, "Merged")...)
 	md = append(md, printSection(e.abandoned, "Abandoned")...)
 	md = append(md, printSection(e.underReview, "Under Review")...)
@@ -242,9 +242,9 @@ func (e *eventSets) markdown() string {
 func printSection(section map[string]bool, title string) []string {
 	if len(section) > 0 {
 		md := make([]string, 0, len(section)+1)
-		md = append(md, fmt.Sprintf("\t* %s", title))
+		md = append(md, fmt.Sprintf("\n## %s", title))
 		for pr := range section {
-			md = append(md, fmt.Sprintf("\t\t* %s", pr))
+			md = append(md, fmt.Sprintf("* %s", pr))
 		}
 		return md
 	}
